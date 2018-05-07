@@ -1,0 +1,9 @@
+T tile1 R b0 b0 b0 b0 null null
+T tile2 G b0 b1 b0 b1 null null
+
+B b0 b0 2
+B b1 b1 1
+
+S tile1 0 0 0
+S tile2 0 1 0
+S tile1 0 2 0
