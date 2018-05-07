@@ -1,4 +1,5 @@
 function aTAM3D( ) {
+  var self = this;
   this.tileset = {};
   this.bondStrengths = {};
   this.history = [];
@@ -18,25 +19,25 @@ function aTAM3D( ) {
             if (allText[i][0] === 'T') {
               // Add tile
               var tileInfo = allText[i].split(' ');
-              var tile = new TileType(tileInfo[1], tileInfo[3:], tileInfo[2]);
-              this.tileset[tileInfo[1]] = tile;
+              var tile = new TileType(tileInfo[1], tileInfo.slice(3), tileInfo[2]);
+              self.tileset[tileInfo[1]] = tile;
             }
             else if (allText[i][0] === 'B') {
               // Add bond
               var bondInfo = allText[i].split(' ');
-              if (!(bondInfo[1] in this.bondStrengths)) {
-                this.bondStrengths[bondInfo[1]] = {};
+              if (!(bondInfo[1] in self.bondStrengths)) {
+                self.bondStrengths[bondInfo[1]] = {};
               }
-              this.bondStrengths[bondInfo[1]][bondInfo[2]] = Number(bondInfo[3]);
-              if (!(bondInfo[2] in this.bondStrengths)) {
-                this.bondStrengths[bondInfo[2]] = {};
+              self.bondStrengths[bondInfo[1]][bondInfo[2]] = Number(bondInfo[3]);
+              if (!(bondInfo[2] in self.bondStrengths)) {
+                self.bondStrengths[bondInfo[2]] = {};
               }
-              this.bondStrengths[bondInfo[2]][bondInfo[1]] = Number(bondInfo[3]);
+              self.bondStrengths[bondInfo[2]][bondInfo[1]] = Number(bondInfo[3]);
             }
             else if (allText[i][0] === 'S') {
               // Add seed tile
               var seedTileInfo = allText[i].split(' ');
-              var tiletype = this.tileset[seedTileInfo[1]];
+              var tiletype = self.tileset[seedTileInfo[1]];
               var position = [Number(seedTileInfo[2]), Number(seedTileInfo[3]), Number(seedTileInfo[4])];
               var tile = new Tile(
                 tiletype,
@@ -44,8 +45,8 @@ function aTAM3D( ) {
                 Number(seedTileInfo[5]),
                 Number(seedTileInfo[6])
               );
-              this.seedAssembly.addTile(tile);
-              this.currAssembly.addTile(tile);
+              self.seedAssembly.addTile(tile);
+              self.currAssembly.addTile(tile);
             }
           }
         }
