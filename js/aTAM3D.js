@@ -1,4 +1,4 @@
-function aTAM3D( ) {
+aTAM3D = function( ) {
   var self = this;
   this.tileset = {};
   this.bondStrengths = {};
@@ -38,12 +38,11 @@ function aTAM3D( ) {
               // Add seed tile
               var seedTileInfo = allText[i].split(' ');
               var tiletype = self.tileset[seedTileInfo[1]];
-              var position = [Number(seedTileInfo[2]), Number(seedTileInfo[3]), Number(seedTileInfo[4])];
               var tile = new Tile(
                 tiletype,
-                position,
-                Number(seedTileInfo[5]),
-                Number(seedTileInfo[6])
+                Number(seedTileInfo[2]),
+                Number(seedTileInfo[3]),
+                Number(seedTileInfo[4])
               );
               self.seedAssembly.addTile(tile);
               self.currAssembly.addTile(tile);
@@ -51,6 +50,9 @@ function aTAM3D( ) {
           }
         }
       }
+    }
+    for (var i in Object.keys(self.tileset)) {
+      alert(Object.keys(self.tileset)[i]);
     }
     request.send();
   };
@@ -61,14 +63,15 @@ function aTAM3D( ) {
 
 }
 
-function Assembly() {
+Assembly = function() {
+  var self = this;
   this.tiles = [];
   this.addTile = function(tile) {
-    this.tiles.push(tile);
+    self.tiles.push(tile);
   }
 }
 
-function TileType(name, bonds, color) {
+TileType = function(name, bonds, color) {
   this.name = name;
 
   if (color === 'R') {
@@ -89,11 +92,11 @@ function TileType(name, bonds, color) {
   this.down = bonds[5];
 }
 
-function Tile(tiletype, position, upSide, northSide) {
+Tile = function(tiletype, x, y, z) {
   this.tiletype = tiletype
-  this.position = position
-  this.upSide = upSide
-  this.northSide = northSide
+  this.x = x
+  this.y = y
+  this.z = z
 }
 // Assembly = function () {
 //   tiles: [],

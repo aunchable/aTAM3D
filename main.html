@@ -12,6 +12,7 @@
 		<script src="js/OrbitControls.js"></script>
 		<script src="js/aTAM3D.js"></script>
 		<script>
+
 			var scene = new THREE.Scene();
 			scene.background = new THREE.Color(0xffffff);
 
@@ -20,29 +21,6 @@
 			var renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
-
-
-			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-			var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-			var cube = new THREE.Mesh( geometry, material );
-			scene.add( cube );
-
-			var edges = new THREE.EdgesGeometry(geometry);
-			var line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: 0x000000}));
-			scene.add(line);
-
-			var geometry2 = new THREE.BoxGeometry( 1, 1, 1 );
-			var material2 = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-			var cube2 = new THREE.Mesh( geometry2, material2 );
-			scene.add( cube2 );
-			cube2.position.set(0,0,1);
-
-			var edges2 = new THREE.EdgesGeometry(geometry2);
-			var line2 = new THREE.LineSegments(edges2, new THREE.LineBasicMaterial({color: 0x000000}));
-			scene.add(line2);
-			line2.position.set(0,0,1);
-
-
 
       var light = new THREE.AmbientLight( 0x404040 ); // soft white light
       scene.add( light );
@@ -56,6 +34,23 @@
 
 			sys = new aTAM3D();
 			sys.load("file:///home/anshul/git/aTAM3D/configs/test.txt");
+
+			// NOT SURE WHY PUTTING AN ALERT HERE MAKES IT WORK...
+			alert("Welcome to aTAM3D");
+
+			for (var i in sys.seedAssembly.tiles) {
+				var tile = sys.seedAssembly.tiles[i];
+				var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+				var material = new THREE.MeshBasicMaterial( { color: tile.tiletype.color } );
+				var cube = new THREE.Mesh( geometry, material );
+				scene.add( cube );
+				cube.position.set(tile.x, tile.y, tile.z);
+
+				var edges = new THREE.EdgesGeometry(geometry);
+				var line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: 0x000000}));
+				scene.add(line);
+				line.position.set(tile.x, tile.y, tile.z);
+			}
 
 			var animate = function () {
 				requestAnimationFrame( animate );
