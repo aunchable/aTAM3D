@@ -8,53 +8,54 @@
 	</head>
 	<body>
 		<script src="js/three.js"></script>
-        <script src="js/TrackballControls.js"></script>
+		<script src="js/jquery-3.3.1.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src="js/aTAM3D.js"></script>
 		<script>
 			var scene = new THREE.Scene();
+			scene.background = new THREE.Color(0xffffff);
+
 			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
 			var renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 
-            controls = new THREE.TrackballControls( camera );
-            controls.target.set( 0, 0, 0 )
 
 			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-			var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
 			var cube = new THREE.Mesh( geometry, material );
 			scene.add( cube );
 
-            var light = new THREE.AmbientLight( 0x404040 ); // soft white light
-            scene.add( light );
+			var edges = new THREE.EdgesGeometry(geometry);
+			var line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: 0x000000}));
+			scene.add(line);
 
-            // White directional light at 70% intensity shining from the top.
-            var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
-            scene.add( directionalLight );
+			var geometry2 = new THREE.BoxGeometry( 1, 1, 1 );
+			var material2 = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			var cube2 = new THREE.Mesh( geometry2, material2 );
+			scene.add( cube2 );
+			cube2.position.set(0,0,1);
 
-            // movement
-            document.addEventListener("keydown", onDocumentKeyDown, false);
-            function onDocumentKeyDown(event) {
-                var keyCode = event.which;
-                // up
-                if (keyCode == 38) {
-                    camera.position.y += 1;
-                    // down
-                } else if (keyCode == 40) {
-                    camera.position.y -= 1;
-                    // left
-                } else if (keyCode == 37) {
-                    camera.position.x -= 1;
-                    // right
-                } else if (keyCode == 39) {
-                    camera.position.x += 1;
-                    // space
-                }
-                render();
-            };
+			var edges2 = new THREE.EdgesGeometry(geometry2);
+			var line2 = new THREE.LineSegments(edges2, new THREE.LineBasicMaterial({color: 0x000000}));
+			scene.add(line2);
+			line2.position.set(0,0,1);
 
+
+
+      var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+      scene.add( light );
+
+      // White directional light at 70% intensity shining from the top.
+      var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
+      scene.add( directionalLight );
 
 			camera.position.z = 5;
+			controls = new THREE.OrbitControls( camera );
+
+			sys = new aTAM3D();
+			sys.load("file:///home/anshul/git/aTAM3D/configs/test.txt");
 
 			var animate = function () {
 				requestAnimationFrame( animate );
