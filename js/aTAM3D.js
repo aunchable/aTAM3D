@@ -2,11 +2,48 @@ aTAM3D = function( ) {
   var self = this;
   this.tileset = {};
   this.bondStrengths = {};
+  this.bondRules = {};
   this.history = [];
   this.temperature = 2;
   this.currIdx = -1;
   this.seedAssembly = new Assembly();
   this.currAssembly = new Assembly();
+
+  this.generateBondRules = funtion() {
+    Object.keys(self.tileset).forEach(function(key1) {
+      var tile1 = self.tileset[key1];
+      self.bondRules[key1] = {};
+      for (var j = 0; j < 6; j++) {
+        self.bondRules[key1][String(j)] = {};
+        Object.keys(self.tileset).forEach(function(key2) {
+            var tile1_bond;
+            var tile2_bond;
+            if (j === 0) { // Tile 2 north of Tile 1
+                tile1_bond = tile1.north;
+                tile2_bond = self.tileset[key2].south;
+            } else if (j === 1) { // Tile 2 east of Tile 1
+                tile1_bond = tile1.east;
+                tile2_bond = self.tileset[key2].west;
+            } else if (j === 2) { // Tile 2 south of Tile 1
+                tile1_bond = tile1.south;
+                tile2_bond = self.tileset[key2].north;
+            } else if (j === 3) { // Tile 2 west of Tile 1
+                tile1_bond = tile1.west;
+                tile2_bond = self.tileset[key2].east;
+            } else if (j === 4) { // Tile 2 above of Tile 1
+                tile1_bond = tile1.up;
+                tile2_bond = self.tileset[key2].down;
+            } else if (j === 5) { // Tile 2 below of Tile 1
+                tile1_bond = tile1.down;
+                tile2_bond = self.tileset[key2].up;
+            }
+            if ((tile1_bond in self.bondStrengths) && (tile2_bond in self.bondStrengths[tile1_bond])) {
+                self.bondRules[key1][String(j)][key2] = self.bondStrengths[tile1_bond][tile2_bond];
+            }
+        });
+      }
+    });
+  }
 
   this.load = function(path) {
     var request = new XMLHttpRequest();
@@ -51,6 +88,7 @@ aTAM3D = function( ) {
         }
       }
     }
+    self.generateBondRules();
     for (var i in Object.keys(self.tileset)) {
       alert(Object.keys(self.tileset)[i]);
     }
@@ -66,8 +104,12 @@ aTAM3D = function( ) {
 Assembly = function() {
   var self = this;
   this.tiles = [];
+  this.position_tiles = {};
+
   this.addTile = function(tile) {
     self.tiles.push(tile);
+    var position_string = [tile.x, tile.y, tile.z].map(String).join('_');
+    self.position_tiles[position_string] = tile.tiletype.name;
   }
 }
 

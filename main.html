@@ -36,11 +36,10 @@
 
 			sys = new aTAM3D();
 			sys.load("file:///home/anshul/git/aTAM3D/configs/test.txt");
+            sys.currIdx = 0;
 
 			// NOT SURE WHY PUTTING AN ALERT HERE MAKES IT WORK...
 			alert("Welcome to aTAM3D");
-
-			var contexts = [];
 
 			for (var i in sys.seedAssembly.tiles) {
 				var tile = sys.seedAssembly.tiles[i];
@@ -91,7 +90,6 @@
 
 			var animate = function () {
 				requestAnimationFrame( animate );
-
 				renderer.render(scene, camera);
 			};
 
