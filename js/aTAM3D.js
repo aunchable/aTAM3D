@@ -52,6 +52,7 @@ aTAM3D = function( ) {
       if (request.readyState === 4) {
         if (request.status === 200 || request.status == 0) {
           var allText = request.responseText.split("\n");
+          var success = true;
           for (var i in allText) {
             if (allText[i][0] === 'T') {
               // Add tile
@@ -81,11 +82,17 @@ aTAM3D = function( ) {
                 Number(seedTileInfo[3]),
                 Number(seedTileInfo[4])
               );
-              self.seedAssembly.addTile(tile);
+              var add_success = self.seedAssembly.addTile(tile);
               self.currAssembly.addTile(tile);
+              if (!add_success) {
+                  success = false;
+              }
             }
           }
           self.generateBondRules();
+          iff (!success) {
+              alert('At least two seed tiles have same specified position!');
+          }
         }
       }
     }
