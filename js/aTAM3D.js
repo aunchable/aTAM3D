@@ -75,13 +75,13 @@ TileType = function(name, bonds, color) {
   this.name = name;
 
   if (color === 'R') {
-    this.color = 0xff0000;
+    this.color = '#ff0000';
   } else if (color === 'G') {
-    this.color = 0x00ff00;
+    this.color = '#0000ff';
   } else if (color === 'B') {
-    this.color = 0x0000ff;
+    this.color = '#00ff00';
   } else {
-    this.color = 0xffffff;
+    this.color = '#ffffff';
   }
 
   this.north = bonds[0];

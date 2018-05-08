@@ -29,7 +29,9 @@
       var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
       scene.add( directionalLight );
 
-			camera.position.z = 5;
+			camera.position.x = 0;
+			camera.position.y = -300;
+			camera.position.z = 500;
 			controls = new THREE.OrbitControls( camera );
 
 			sys = new aTAM3D();
@@ -38,22 +40,58 @@
 			// NOT SURE WHY PUTTING AN ALERT HERE MAKES IT WORK...
 			alert("Welcome to aTAM3D");
 
+			var contexts = [];
+
 			for (var i in sys.seedAssembly.tiles) {
 				var tile = sys.seedAssembly.tiles[i];
-				var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-				var material = new THREE.MeshBasicMaterial( { color: tile.tiletype.color } );
-				var cube = new THREE.Mesh( geometry, material );
+				var geometry = new THREE.BoxGeometry(128, 128, 128, 1, 1, 1 );
+
+				var materials = [];
+				for (var j = 0; j < 6; j++) {
+					var bitmap = document.createElement('canvas');
+					bitmap.width = 128;
+					bitmap.height = 128;
+					var g = bitmap.getContext('2d');
+					g.font = 'Bold 20pt Arial';
+					g.fillStyle = tile.tiletype.color;
+					g.fillRect(0, 0, bitmap.width, bitmap.height);
+					g.fillStyle = '#000000';
+					g.textAlign = "center";
+					g.textBaseline = "middle";
+					var text;
+					if (j === 0) {
+						text = tile.tiletype.east;
+					} else if (j === 1) {
+						text = tile.tiletype.west;
+					} else if (j === 2) {
+						text = tile.tiletype.north;
+					} else if (j === 3) {
+						text = tile.tiletype.south;
+					} else if (j === 4) {
+						text = tile.tiletype.up;
+					} else if (j === 5) {
+						text = tile.tiletype.down;
+					}
+					g.fillText(text, bitmap.width / 2, bitmap.height / 2);
+
+					var texture = new THREE.Texture(bitmap);
+					texture.needsUpdate = true;
+					materials.push(new THREE.MeshBasicMaterial( { map: texture } ));
+				}
+
+				var cube = new THREE.Mesh( geometry, materials );
 				scene.add( cube );
-				cube.position.set(tile.x, tile.y, tile.z);
+				cube.position.set(128 * tile.x, 128 * tile.y, 128 * tile.z);
 
 				var edges = new THREE.EdgesGeometry(geometry);
 				var line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: 0x000000}));
 				scene.add(line);
-				line.position.set(tile.x, tile.y, tile.z);
+				line.position.set(128 * tile.x, 128 * tile.y, 128 * tile.z);
 			}
 
 			var animate = function () {
 				requestAnimationFrame( animate );
+
 				renderer.render(scene, camera);
 			};
 
