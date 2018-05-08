@@ -85,10 +85,11 @@ aTAM3D = function( ) {
               self.currAssembly.addTile(tile);
             }
           }
+          self.generateBondRules();
         }
       }
     }
-    self.generateBondRules();
+
     for (var i in Object.keys(self.tileset)) {
       alert(Object.keys(self.tileset)[i]);
     }
@@ -104,12 +105,53 @@ aTAM3D = function( ) {
 Assembly = function() {
   var self = this;
   this.tiles = [];
+
+  // Key is 'x_y_z', Value is [tiletype name] + boolean * 6 to say if tile
+  // exists adjacent in corresponding direction
   this.position_tiles = {};
 
   this.addTile = function(tile) {
     self.tiles.push(tile);
-    var position_string = [tile.x, tile.y, tile.z].map(String).join('_');
-    self.position_tiles[position_string] = tile.tiletype.name;
+
+    var position = [tile.x, tile.y, tile.z];
+    var position_string = position.map(String).join('_');
+
+    if (!(position_string in self.position_tiles)) {
+        self.position_tiles[position_string] = [tile.tiletype.name, false, false, false, false, false, false];
+
+        var unit_vecs = [[0,1,0],[1,0,0],[0,-1,0],[-1,0,0],[0,0,1],[0,0,-1]];
+        for (var j in unit_vecs) {
+          var adj = [];
+          for(var i = 0; i < 3; i++) {
+            adj.push(unit_vecs[j][i] + position[i]);
+          }
+          var adj_string = adj.map(String).join('_');
+          if (adj_string in self.position_tiles) {
+              if (j === 0) { // Check if tile is on north side
+                  self.position_tiles[position_string][1] = true;
+                  self.position_tiles[adj_string][3] = true;
+              } else if (j === 1) { // Check if tile is on east side
+                  self.position_tiles[position_string][2] = true;
+                  self.position_tiles[adj_string][4] = true;
+              } else if (j === 2) { // Check if tile is on south side
+                  self.position_tiles[position_string][3] = true;
+                  self.position_tiles[adj_string][1] = true;
+              } else if (j === 3) { // Check if tile is on west side
+                  self.position_tiles[position_string][4] = true;
+                  self.position_tiles[adj_string][2] = true;
+              } else if (j === 4) { // Check if tile is on up side
+                  self.position_tiles[position_string][5] = true;
+                  self.position_tiles[adj_string][6] = true;
+              } else if (j === 5) { // Check if tile is on down side
+                  self.position_tiles[position_string][6] = true;
+                  self.position_tiles[adj_string][5] = true;
+              }
+          }
+        }
+        return(true);
+    } else {
+        return(false);
+    }
   }
 }
 
