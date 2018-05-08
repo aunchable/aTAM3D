@@ -77,9 +77,9 @@ TileType = function(name, bonds, color) {
   if (color === 'R') {
     this.color = '#ff0000';
   } else if (color === 'G') {
-    this.color = '#0000ff';
-  } else if (color === 'B') {
     this.color = '#00ff00';
+  } else if (color === 'B') {
+    this.color = '#0000ff';
   } else {
     this.color = '#ffffff';
   }
