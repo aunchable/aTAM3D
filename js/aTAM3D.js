@@ -8,6 +8,7 @@ aTAM3D = function( ) {
   this.currIdx = -1;
   this.seedAssembly = new Assembly();
   this.currAssembly = new Assembly();
+  var unitVecs = [[0,1,0],[1,0,0],[0,-1,0],[-1,0,0],[0,0,1],[0,0,-1]];
 
   this.generateBondRules = funtion() {
     Object.keys(self.tileset).forEach(function(key1) {
@@ -90,7 +91,7 @@ aTAM3D = function( ) {
             }
           }
           self.generateBondRules();
-          iff (!success) {
+          if (!success) {
               alert('At least two seed tiles have same specified position!');
           }
         }
@@ -104,18 +105,80 @@ aTAM3D = function( ) {
   };
 
   this.take_step = function() {
+      var success = false;
+      var counter = 0;
+      while ((!success) && (counter < 2 * self.currAssembly.numTiles)) {
+          counter = counter + 1;
+          var currTileIdx = Math.floor(Math.random() * self.currAssembly.numTiles);
+          var currTile = self.currAssembly.tiles[currTileIdx];
+          var position = [currTile.x, currTile.y, currTile.z];
+          var positionString = position.map(String).join('_');
+          var posIndexes = shuffle([0, 1, 2, 3, 4, 5]);
+          for (var j = 0; j < len(posIndexes); j++) {
+              // If space in direction is open
+              if ((!success) && (self.currAssembly.positionTiles[positionString][posIndexes[j] + 1] === false)) {
+                  var newPosition = [];
+                  var unitVec = unitVecs[posIndexes[j]];
+                  for (var k = 0; k < 3; k++) {
+                    newPosition.push(unitVec[k] + position[k]);
+                  }
+                  var newPositionString = newPosition.map(String).join('_');
 
+                  var possibleTiles = self.bondRules[currTile.tiletype.name][String(j)]
+                  Object.keys(possibleTiles).forEach(function(key) {
+                    if (!success) {
+                        var newTileName = possibleTiles[key];
+                        var strength = 0;
+                        for (var i = 0; i < 6; i++) {
+                            neighborPosition = [];
+                            for (k = 0; k < 3; k++) {
+                              newPosition.push(unitVecs[i][k] + newPosition[k]);
+                            }
+                            var neighborPositionString = newPosition.map(String).join('_');
+                            if (neighborPositionString in self.currAssembly.positionTiles) {
+                                var neighborTileName = self.currAssembly.positionTiles[neighborPositionString][0];
+                                if (neighborTileName in self.bondRules[newTileName][String(i)]) {
+                                    strength = strength + self.bondRules[newTileName][String(i)][neighborTileName];
+                                }
+                            }
+                        }
+                        if (strength >= self.temperature) {
+                            var newTile = new Tile(self.tileset[newTileName], newPosition[0], newPosition[1], newPosition[2]);
+                            self.currAssembly.addTile(newTile);
+                            self.history.push(newTile);
+                            self.currIdx = self.currIdx + 1;
+                            success = true;
+                        }
+                    }
+                  });
+              }
+          }
+      }
   };
 
+}
+
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
 }
 
 Assembly = function() {
   var self = this;
   this.tiles = [];
+  this.closedPositions = [];
+  this.numTiles = 0;
+  var unitVecs = [[0,1,0],[1,0,0],[0,-1,0],[-1,0,0],[0,0,1],[0,0,-1]];
 
   // Key is 'x_y_z', Value is [tiletype name] + boolean * 6 to say if tile
   // exists adjacent in corresponding direction
-  this.position_tiles = {};
+  this.positionTiles = {};
 
   this.addTile = function(tile) {
     self.tiles.push(tile);
@@ -123,38 +186,38 @@ Assembly = function() {
     var position = [tile.x, tile.y, tile.z];
     var position_string = position.map(String).join('_');
 
-    if (!(position_string in self.position_tiles)) {
-        self.position_tiles[position_string] = [tile.tiletype.name, false, false, false, false, false, false];
+    if (!(position_string in self.positionTiles)) {
+        self.positionTiles[position_string] = [tile.tiletype.name, false, false, false, false, false, false];
 
-        var unit_vecs = [[0,1,0],[1,0,0],[0,-1,0],[-1,0,0],[0,0,1],[0,0,-1]];
-        for (var j in unit_vecs) {
+        for (var j in unitVecs) {
           var adj = [];
           for(var i = 0; i < 3; i++) {
-            adj.push(unit_vecs[j][i] + position[i]);
+            adj.push(unitVecs[j][i] + position[i]);
           }
           var adj_string = adj.map(String).join('_');
-          if (adj_string in self.position_tiles) {
+          if (adj_string in self.positionTiles) {
               if (j === 0) { // Check if tile is on north side
-                  self.position_tiles[position_string][1] = true;
-                  self.position_tiles[adj_string][3] = true;
+                  self.positionTiles[position_string][1] = true;
+                  self.positionTiles[adj_string][3] = true;
               } else if (j === 1) { // Check if tile is on east side
-                  self.position_tiles[position_string][2] = true;
-                  self.position_tiles[adj_string][4] = true;
+                  self.positionTiles[position_string][2] = true;
+                  self.positionTiles[adj_string][4] = true;
               } else if (j === 2) { // Check if tile is on south side
-                  self.position_tiles[position_string][3] = true;
-                  self.position_tiles[adj_string][1] = true;
+                  self.positionTiles[position_string][3] = true;
+                  self.positionTiles[adj_string][1] = true;
               } else if (j === 3) { // Check if tile is on west side
-                  self.position_tiles[position_string][4] = true;
-                  self.position_tiles[adj_string][2] = true;
+                  self.positionTiles[position_string][4] = true;
+                  self.positionTiles[adj_string][2] = true;
               } else if (j === 4) { // Check if tile is on up side
-                  self.position_tiles[position_string][5] = true;
-                  self.position_tiles[adj_string][6] = true;
+                  self.positionTiles[position_string][5] = true;
+                  self.positionTiles[adj_string][6] = true;
               } else if (j === 5) { // Check if tile is on down side
-                  self.position_tiles[position_string][6] = true;
-                  self.position_tiles[adj_string][5] = true;
+                  self.positionTiles[position_string][6] = true;
+                  self.positionTiles[adj_string][5] = true;
               }
           }
         }
+        self.numTiles = self.numTiles + 1;
         return(true);
     } else {
         return(false);
@@ -174,6 +237,8 @@ TileType = function(name, bonds, color) {
   } else {
     this.color = '#ffffff';
   }
+
+  this.bonds = bonds;
 
   this.north = bonds[0];
   this.east = bonds[1];
