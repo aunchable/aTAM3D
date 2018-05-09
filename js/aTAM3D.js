@@ -121,10 +121,16 @@ aTAM3D = function( ) {
           }
           var newPositionString = newPosition.map(String).join('_');
 
-          var possibleTiles = self.bondRules[currTile.tiletype.name][String(posIndexes[j])];
-          Object.keys(possibleTiles).forEach(function(key) {
+          var possibleTiles = Object.keys(self.bondRules[currTile.tiletype.name][String(posIndexes[j])]);
+          var posTilesIndexes = [];
+          for (var cnt = 0; cnt < possibleTiles.length; cnt++) {
+            posTilesIndexes.push(cnt);
+          }
+          posTilesIndexes = shuffle(posTilesIndexes);
+
+          for (var idx = 0; idx < posTilesIndexes.length; idx++) {
             if (!success) {
-              var newTileName = key;
+              var newTileName = possibleTiles[posTilesIndexes[idx]];
               var strength = 0;
               for (var i = 0; i < 6; i++) {
                 neighborPosition = [];
@@ -147,7 +153,7 @@ aTAM3D = function( ) {
                 success = true;
               }
             }
-          });
+          }
         }
       }
     }
@@ -259,8 +265,8 @@ TileType = function(name, bonds, color) {
     this.color = '#00ff00';
   } else if (color === 'B') {
     this.color = '#0000ff';
-  } else {
-    this.color = '#ffffff';
+  } else if (color === 'Y') {
+    this.color = '#ffff00';
   }
 
   this.bonds = bonds;
