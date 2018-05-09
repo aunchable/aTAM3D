@@ -88,6 +88,12 @@
 				line.position.set(128 * tile.x, 128 * tile.y, 128 * tile.z);
 			}
 
+			// Alert all bondRules
+			// alert(sys.bondRulesToString());
+			// alert(sys.currAssemblyToString());
+			// sys.take_step();
+			// alert(sys.currAssemblyToString());
+
 			var animate = function () {
 				requestAnimationFrame( animate );
 				renderer.render(scene, camera);
