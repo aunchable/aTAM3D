@@ -267,6 +267,8 @@ TileType = function(name, bonds, color) {
     this.color = '#0000ff';
   } else if (color === 'Y') {
     this.color = '#ffff00';
+  } else if (color === 'gray') {
+    this.color = '#666666';
   }
 
   this.bonds = bonds;
