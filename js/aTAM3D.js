@@ -89,6 +89,10 @@ aTAM3D = function( ) {
                   success = false;
               }
             }
+            else if (allText[i][0] === 'P') {
+              var tempInfo = allText[i].split(' ');
+              self.temperature = Number(tempInfo[1]);
+            }
           }
           self.generateBondRules();
           if (!success) {

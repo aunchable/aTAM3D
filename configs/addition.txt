@@ -1,0 +1,67 @@
+T add Y x - - x c0 -
+T iA gray - x - - S -
+T iB gray - - x - S -
+
+T i0 R 0 0 0 0 S S
+T i1 G 1 1 1 1 S S
+T icap B C C C C - S
+
+T 0o000 R 0 0 0 0 c0 c0
+T 1o001 G 0 1 1 0 c0 c1
+T 1o010 G 1 1 1 0 c0 c0
+T 0o011 R 1 0 0 0 c1 c1
+T 1o100 G 0 1 1 1 c0 c0
+T 0o101 R 0 0 0 1 c1 c1
+T 0o110 R 1 0 0 1 c1 c0
+T 1o111 G 1 1 1 1 c1 c1
+
+T 0oC00 R 0 0 0 C c0p c0
+T 1oC01 G 0 1 1 C c0p c1
+T 1oC10 G 1 1 1 C c0p c0
+T 0oC11 R 1 0 0 C c1p c1
+T 0o0C0 R C 0 0 1 c0p c0
+T 1o0C1 G C 1 1 1 c1p c1
+T 1o1C0 G C 1 1 1 c1p c0
+T 0o1C1 R C 0 0 1 c1p c1
+T CoCC0 B C C C C - c0
+T 1oCC1 G C 1 1 C cp c1
+
+T 0o00p R 0 0 0 0 c0p c0p
+T 1o01p G 0 1 1 0 c0p c1p
+T 1o10p G 1 1 1 1 c0p c0p
+T 0o11p R 1 0 0 1 c1p c1p
+T CoC0p B C C C C - c0p
+T 1oC1p G C 1 1 C cp c1p
+
+T CoCP B C C C C - cp
+
+B x x 3
+B S S 3
+B 0 0 1
+B 1 1 1
+B C C 1
+B c0 c0 1
+B c1 c1 1
+B c0p c0p 2
+B c1p c1p 2
+B cp cp 3
+
+P 3
+
+S add 0 0 0
+S iA -1 0 0
+S iB 0 1 0
+
+S i0 -1 0 1
+S i0 -1 0 2
+S i1 -1 0 3
+S i1 -1 0 4
+S icap -1 0 5
+
+S i0 0 1 1
+S i0 0 1 2
+S i1 0 1 3
+S i1 0 1 4
+S i1 0 1 5
+S i1 0 1 6
+S icap 0 1 7
