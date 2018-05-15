@@ -7,6 +7,7 @@
 		</style>
 	</head>
 	<body>
+		<input type="file" id ="input">
 		<script src="js/three.js"></script>
 		<script src="js/jquery-3.3.1.js"></script>
 		<script src="js/OrbitControls.js"></script>
@@ -27,14 +28,25 @@
 			camera.position.z = 500;
 			controls = new THREE.OrbitControls( camera );
 
-			sys = new aTAM3D();
-			sys.load("file:configs/fibonacci_counter.txt");
-      		sys.currIdx = 0;
-
-			// NOT SURE WHY PUTTING AN ALERT HERE MAKES IT WORK...
-			alert("Welcome to aTAM3D");
-
 			var size = 32;
+
+			var sys = new aTAM3D();
+
+			var inputElement = document.getElementById("input");
+			inputElement.addEventListener("change", updateConfig, false);
+			function updateConfig(){
+				clearThree(scene);
+				var file = this.files[0];
+				var reader = new FileReader();
+				reader.onload = function(e){
+					var text = reader.result;
+					sys = new aTAM3D();
+					sys.loadAsText(text);
+					initializeConfig();
+				}
+				reader.readAsText(file);
+			}
+
 			var addTileToScene = function(tile) {
 				var geometry = new THREE.BoxGeometry(size, size, size, 1, 1, 1 );
 
@@ -81,9 +93,30 @@
 				line.position.set(size * tile.x, size * tile.y, size * tile.z);
 			};
 
-			for (var i in sys.seedAssembly.tiles) {
-				var tile = sys.seedAssembly.tiles[i];
-				addTileToScene(tile);
+			var animate = function () {
+				requestAnimationFrame( animate );
+				renderer.render(scene, camera);
+			};
+
+			function clearThree(threeobj){
+				// TODO unclear if this actually clears memory
+				while(threeobj.children.length > 0){ 
+				clearThree(threeobj.children[0])
+				threeobj.remove(threeobj.children[0]);
+				}
+				if(threeobj.mesh) threeobj.mesh.dispose()
+				if(threeobj.geometry) threeobj.geometry.dispose()
+				if(threeobj.material){
+					if(threeobj.material.length){
+						// TODO why does this not crash? does it still memory leak? fuck if i know
+						for (mesh in threeobj.material){
+							threeobj.material[mesh].dispose()
+						}
+					} else{
+						threeobj.material.dispose()
+					}
+				} 
+				if(threeobj.texture) threeobj.texture.dispose()
 			}
 
 			document.addEventListener("keydown", onDocumentKeyDown, false);
@@ -98,18 +131,15 @@
 				renderer.render(scene, camera);
 			};
 
-			// Alert all bondRules
-			// alert(sys.bondRulesToString());
-			// alert(sys.currAssemblyToString());
-			// sys.take_step();
-			// alert(sys.currAssemblyToString());
+			function initializeConfig(){
+				sys.currIdx = 0;
+				for (var i in sys.seedAssembly.tiles) {
+					var tile = sys.seedAssembly.tiles[i];
+					addTileToScene(tile);
+				}
+				animate();
+			}
 
-			var animate = function () {
-				requestAnimationFrame( animate );
-				renderer.render(scene, camera);
-			};
-
-			animate();
 		</script>
 	</body>
 </html>
