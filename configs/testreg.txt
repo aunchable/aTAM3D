@@ -1,0 +1,393 @@
+P 3
+
+#### Register Operation
+
+T reg0 R r0 - - - reg3 reg3
+T reg1 G r1 - - - reg3 reg3
+T regchk B B2 - - - reg3 -
+T dec0 G r1 - r0 - dec dec
+T dec1 R r0 - r1 - dec ndec
+T decbuf0 R r0 - r0 - ndec ndec
+T decbuf1 G r1 - r1 - ndec ndec
+T chk0 Y r0 - r0 - done done
+T chk1 G r1 - r1 - ndone done
+T chkbuf0 R r0 - r0 - ndone ndone
+T chkbuf1 G r1 - r1 - ndone ndone
+T deccap B B3 - B2 - ndec -
+T decchk B B2 - B3 - done -
+
+B r0 r0 2
+B r1 r1 2
+
+B reg3 reg3 3
+B B3 B3 3
+B B2 B2 2
+
+B dec dec 1
+B ndec ndec 1
+B done done 1
+B ndone ndone 1
+
+
+#### Board Definition Operation
+
+# Arguments
+T defstart B def3 def3 - - - reg3
+T defdecsig gray def2 hor def3 - BLANKARG dec
+T defdeccont Y def3 hor def2 - ARG ndone
+T defdecmark Y - hor def2 - ARG done
+T defend B CORRECT - - def3 - -
+T correct Y - - CORRECT hor - -
+
+B def3 def3 3
+B def2 def2 2
+B ARG ARG 3
+B BLANKARG BLANKARG 3
+B CORRECT CORRECT 2
+
+# Function Input
+T inpstart B inp2 def3 - def3 INPUT reg3
+T inpdecsig gray inp1 hor inp2 hor COPY dec
+T inpdeccont B inp2 hor inp1 hor COPY ndone
+T inpdecmark Y cinp hor inp1 hor MARK done
+T inpcopy gray cinp hor cinp hor COPY -
+
+B cinp cinp 2
+B inp2 inp2 2
+B inp1 inp1 1
+
+B COPY COPY 2
+B MARK MARK 2
+B hor hor 1
+
+
+# Function Output
+T outstart B out2 def3 - def3 OUTPUT reg3
+T outdecsig gray out1 hor out2 hor COPYOUT dec
+T outdeccont B out2 hor out1 hor COPYOUT ndone
+T outdecmark Y nout hor out1 hor MARKOUT done
+T outcopy gray nout hor nout hor COPYOUT -
+
+B nout nout 2
+B out2 out2 2
+B out1 out1 1
+
+B COPYOUT COPYOUT 1
+B MARKOUT MARKOUT 2
+
+
+# Check units
+T checkstart B check2 def3 - def3 CHECK reg3
+T checkdecsig gray check1 hor check2 hor COPYCHECK dec
+T checkdeccont B check2 hor check1 hor COPYCHECK ndone
+T checkdecmark Y ncheck hor check1 hor MARKCHECK done
+T checkcopy gray ncheck hor ncheck hor COPYCHECK -
+T check0 R PROPCHK0 - - - - CHECK
+T check1 G PROPCHK1 - - - - CHECK
+
+B ncheck ncheck 2
+B check2 check2 2
+B check1 check1 1
+
+B CHECK CHECK 3
+B COPYCHECK COPYCHECK 1
+B MARKCHECK MARKCHECK 1
+
+T checkbuffer B - def3 - def3 - -
+T checkbuffer2 gray - hor - hor CHKBUFF -
+
+B CHKBUFF CHKBUFF 2
+
+
+# Set bit
+T setdef B set2 def3 Set def3 SET -
+T setdecsig gray set1 hor set2 hor COPYSET dec
+T setdeccont B set2 hor set1 hor COPYSET ndone
+T setdecmark Y nset hor set1 hor MARKSET done
+T setcopy gray nset hor nset hor COPYSET -
+
+B nset nset 2
+B set2 set2 2
+B set1 set1 1
+
+B SET SET 3
+B COPYSET COPYSET 1
+B MARKSET MARKSET 2
+
+
+# Gates
+B GATE GATE 3
+
+# NOT gate
+T notdef B not2 def3 Not def3 GATE -
+T notcont B not2 hor not2 hor NOT1 -
+B not2 not2 2
+B NOT1 NOT1 1
+
+# AND gate
+T anddef B and2 def3 And def3 GATE -
+T andcont B and2 hor and2 hor AND1 -
+B and2 and2 2
+B AND1 AND1 1
+
+# OR gate
+T ordef B or2 def3 Or def3 GATE -
+T orcont B or2 hor or2 hor OR1 -
+B or2 or2 2
+B OR1 OR1 1
+
+# NAND gate
+T nanddef B nand2 def3 Nand def3 GATE -
+T nandcont1 B nand2 hor nand2 hor NAND1 -
+B nand2 nand2 2
+B NAND1 NAND1 1
+
+# NOR gate
+T nordef B nor2 def3 Nor def3 GATE -
+T norcont1 B nor2 hor nor2 hor NOR1 -
+B nor2 nor2 2
+B NOR1 NOR1 1
+
+
+#### Variable Operation
+
+# Arguments
+T arg0 R - a0 - - - ARG
+T arg1 G - a1 - - - ARG
+T argblk gray - blk - - - BLANKARG
+
+# Copy
+T copya0 R - a0 - a0 - COPY
+T copya1 G - a1 - a1 - COPY
+T copyb0 R - b0 - b0 - COPY
+T copyb1 G - b1 - b1 - COPY
+T copyblk gray - blk - blk - COPY
+
+# Mark
+T marka0 R - b0 - a0 - MARK
+T marka1 G - b1 - a1 - MARK
+
+B a0 a0 1
+B a1 a1 1
+B b0 b0 1
+B b1 b1 1
+B blk blk 1
+
+
+# Output
+T out0read gray NOTE0 blk NOTE0 outsig0 - -
+T out1read gray NOTE1 blk NOTE1 outsig1 - -
+T out0copy0 R NOTE0 a0 NOTE0 a0 - COPYOUT
+T out0copy1 G NOTE0 a1 NOTE0 a1 - COPYOUT
+T out1copy0 R NOTE1 a0 NOTE1 a0 - COPYOUT
+T out1copy1 G NOTE1 a1 NOTE1 a1 - COPYOUT
+T out0blank gray NOTE0 blk NOTE0 blk - COPYOUT
+T out1blank gray NOTE1 blk NOTE1 blk - COPYOUT
+T out0mark R NOTE0 a0 NOTE0 - - MARKOUT
+T out1mark G NOTE1 a1 NOTE1 - - MARKOUT
+
+B outsig0 outsig0 3
+B outsig1 outsig1 3
+B NOTE0 NOTE0 1
+B NOTE1 NOTE1 1
+
+
+# Check
+T prop0copycheckblk gray PROPCHK0 blk PROPCHK0 blk - COPYCHECK
+T prop0copychecka0 R PROPCHK0 a0 PROPCHK0 a0 - COPYCHECK
+T prop0copychecka1 G PROPCHK0 a1 PROPCHK0 a1 - COPYCHECK
+T prop1copycheckblk gray PROPCHK1 blk PROPCHK1 blk - COPYCHECK
+T prop1copychecka0 R PROPCHK1 a0 PROPCHK1 a0 - COPYCHECK
+T prop1copychecka1 G PROPCHK1 a1 PROPCHK1 a1 - COPYCHECK
+T propcopycheckblk gray PROPCHK blk PROPCHK blk - COPYCHECK
+T propcopychecka0 R PROPCHK a0 PROPCHK a0 - COPYCHECK
+T propcopychecka1 G PROPCHK a1 PROPCHK a1 - COPYCHECK
+
+T prop0copymarka0 R TRUE a0 PROPCHK0 a0 - MARKCHECK
+T prop0copymarka1 G FALSE a1 PROPCHK0 a1 - MARKCHECK
+T prop1copymarka0 R FALSE a0 PROPCHK1 a0 - MARKCHECK
+T prop1copymarka1 G TRUE a1 PROPCHK1 a1 - MARKCHECK
+
+T propcopycheckTRUE gray PROPCHK outsigTRUE TRUE - - -
+T propandcheckFALSE gray PROPCHK outsigFALSE FALSE - - -
+
+B PROPCHK PROPCHK 1
+B PROPCHK0 PROPCHK0 1
+B PROPCHK1 PROPCHK1 1
+B TRUE TRUE 3
+B FALSE FALSE 3
+B outsigTRUE outsigTRUE 3
+B outsigFALSE outsigFALSE 3
+
+T checkcontread gray CHKCONT blk CHKCONT outsigTRUE - CHKBUFF
+T checkconta0 R CHKCONT a0 CHKCONT a0 - CHKBUFF
+T checkconta1 G CHKCONT a1 CHKCONT a1 - CHKBUFF
+T checkcontblk gray CHKCONT blk CHKCONT blk - CHKBUFF
+
+B CHKCONT CHKCONT 2
+
+
+# Set
+T set0 R SET0 - - - - SET
+T set1 G SET1 - - - - SET
+T set0copyblk gray SET0 blk SET0 blk - COPYSET
+T set0copya0 R SET0 a0 SET0 a0 - COPYSET
+T set0copya1 G SET0 a1 SET0 a1 - COPYSET
+T set0mark R SET0 a0 SET0 - - MARKSET
+T set1copyblk gray SET1 blk SET1 blk - COPYSET
+T set1copya0 R SET1 a0 SET1 a0 - COPYSET
+T set1copya1 G SET1 a1 SET1 a1 - COPYSET
+T set1mark G SET1 a1 SET1 - - MARKSET
+
+B SET0 SET0 1
+B SET1 SET1 1
+
+
+# Gate generals
+T gatestart B PROP - - - - GATE
+T propandout0 gray PROP outsig0 OUT0 - - -
+T propandout1 gray PROP outsig1 OUT1 - - -
+
+B PROP PROP 1
+B PROP0 PROP0 1
+B PROP1 PROP1 1
+B OUT0 OUT0 3
+B OUT1 OUT1 3
+
+
+# NOT gate
+T propnotblk gray PROP blk PROP blk - NOT1
+T propnota0 R PROP a0 PROP a0 - NOT1
+T propnota1 G PROP a1 PROP a1 - NOT1
+T propnotb0 R OUT1 a0 PROP b0 - NOT1
+T propnotb1 G OUT0 a1 PROP b1 - NOT1
+
+
+# AND gate
+T propandblk gray PROP blk PROP blk - AND1
+T propanda0 R PROP a0 PROP a0 - AND1
+T propanda1 G PROP a1 PROP a1 - AND1
+
+T propandb0 R PROP0 a0 PROP b0 - AND1
+T propandb1 G PROP1 a1 PROP b1 - AND1
+
+T prop0andblk gray PROP0 blk PROP0 blk - AND1
+T prop0anda0 R PROP0 a0 PROP0 a0 - AND1
+T prop0anda1 G PROP0 a1 PROP0 a1 - AND1
+T prop1andblk gray PROP1 blk PROP1 blk - AND1
+T prop1anda0 R PROP1 a0 PROP1 a0 - AND1
+T prop1anda1 G PROP1 a1 PROP1 a1 - AND1
+
+T prop0andb0 Y OUT0 a0 PROP0 b0 - AND1
+T prop1andb0 Y OUT0 a0 PROP1 b0 - AND1
+T prop0andb1 Y OUT0 a1 PROP0 b1 - AND1
+T prop1andb1 Y OUT1 a1 PROP1 b1 - AND1
+
+
+# OR gate
+T proporblk gray PROP blk PROP blk - OR1
+T propora0 R PROP a0 PROP a0 - OR1
+T propora1 G PROP a1 PROP a1 - OR1
+
+T proporb0 R PROP0 a0 PROP b0 - OR1
+T proporb1 G PROP1 a1 PROP b1 - OR1
+
+T prop0orblk gray PROP0 blk PROP0 blk - OR1
+T prop0ora0 R PROP0 a0 PROP0 a0 - OR1
+T prop0ora1 G PROP0 a1 PROP0 a1 - OR1
+T prop1orblk gray PROP1 blk PROP1 blk - OR1
+T prop1ora0 R PROP1 a0 PROP1 a0 - OR1
+T prop1ora1 G PROP1 a1 PROP1 a1 - OR1
+
+T prop0orb0 Y OUT0 a0 PROP0 b0 - OR1
+T prop1orb0 Y OUT1 a0 PROP1 b0 - OR1
+T prop0orb1 Y OUT1 a1 PROP0 b1 - OR1
+T prop1orb1 Y OUT1 a1 PROP1 b1 - OR1
+
+
+# NAND gate
+T propnandblk gray PROP blk PROP blk - NAND1
+T propnanda0 R PROP a0 PROP a0 - NAND1
+T propnanda1 G PROP a1 PROP a1 - NAND1
+
+T propnandb0 R PROP0 a0 PROP b0 - NAND1
+T propnandb1 G PROP1 a1 PROP b1 - NAND1
+
+T prop0nandblk gray PROP0 blk PROP0 blk - NAND1
+T prop0nanda0 R PROP0 a0 PROP0 a0 - NAND1
+T prop0nanda1 G PROP0 a1 PROP0 a1 - NAND1
+T prop1nandblk gray PROP1 blk PROP1 blk - NAND1
+T prop1nanda0 R PROP1 a0 PROP1 a0 - NAND1
+T prop1nanda1 G PROP1 a1 PROP1 a1 - NAND1
+
+T prop0nandb0 Y OUT1 a0 PROP0 b0 - NAND1
+T prop1nandb0 Y OUT1 a0 PROP1 b0 - NAND1
+T prop0nandb1 Y OUT1 a1 PROP0 b1 - NAND1
+T prop1nandb1 Y OUT0 a1 PROP1 b1 - NAND1
+
+
+# NOR gate
+T propnorblk gray PROP blk PROP blk - NOR1
+T propnora0 R PROP a0 PROP a0 - NOR1
+T propnora1 G PROP a1 PROP a1 - NOR1
+
+T propnorb0 R PROP0 a0 PROP b0 - NOR1
+T propnorb1 G PROP1 a1 PROP b1 - NOR1
+
+T prop0norblk gray PROP0 blk PROP0 blk - NOR1
+T prop0nora0 R PROP0 a0 PROP0 a0 - NOR1
+T prop0nora1 G PROP0 a1 PROP0 a1 - NOR1
+T prop1norblk gray PROP1 blk PROP1 blk - NOR1
+T prop1nora0 R PROP1 a0 PROP1 a0 - NOR1
+T prop1nora1 G PROP1 a1 PROP1 a1 - NOR1
+
+T prop0norb0 Y OUT1 a0 PROP0 b0 - NOR1
+T prop1norb0 Y OUT0 a0 PROP1 b0 - NOR1
+T prop0norb1 Y OUT0 a1 PROP0 b1 - NOR1
+T prop1norb1 Y OUT0 a1 PROP1 b1 - NOR1
+
+
+
+
+# 4bit square root
+# Seed (Function Definition)
+
+S defstart -1 0 0
+S reg1 -1 0 -1
+S reg0 -1 0 -2
+S reg1 -1 0 -3
+S regchk -1 0 -4
+
+======= NOR 1,2 -> 1
+S inpstart 0 0 0
+S reg1 0 0 -1
+S regchk 0 0 -2
+
+S inpstart 1 0 0
+S reg0 1 0 -1
+S reg1 1 0 -2
+S regchk 1 0 -3
+
+S nordef 2 0 0
+S gatestart 2 0 1
+
+S outstart 3 0 0
+S reg1 3 0 -1
+S regchk 3 0 -2
+
+=======
+S set0 4 0 1
+S setdef 4 0 0
+S reg1 4 0 -1
+S reg1 4 0 -2
+S regchk 4 0 -3
+
+=======
+S check0 5 0 1
+S checkstart 5 0 0
+S reg1 5 0 -1
+S reg1 5 0 -2
+S regchk 5 0 -3
+S checkbuffer 6 0 0
+
+S defend 7 0 0

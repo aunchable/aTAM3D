@@ -1,0 +1,176 @@
+# 4bit square root
+# Seed (Function Definition)
+
+S defstart -1 0 0
+S reg1 -1 0 -1
+S reg0 -1 0 -2
+S reg1 -1 0 -3
+S regchk -1 0 -4
+
+======= NOR 1,2 -> 1
+S inpstart 0 0 0
+S reg1 0 0 -1
+S regchk 0 0 -2
+
+S inpstart 1 0 0
+S reg0 1 0 -1
+S reg1 1 0 -2
+S regchk 1 0 -3
+
+S nordef 2 0 0
+S gatestart 2 0 1
+
+S outstart 3 0 0
+S reg1 3 0 -1
+S regchk 3 0 -2
+
+======= NOT 4 -> 2; AND 2,3 -> 5
+S inpstart 4 0 0
+S reg0 4 0 -1
+S reg0 4 0 -2
+S reg1 4 0 -3
+S regchk 4 0 -4
+
+S notdef 5 0 0
+S gatestart 5 0 1
+
+S outstart 6 0 0
+S reg0 6 0 -1
+S reg1 6 0 -2
+S regchk 6 0 -3
+
+S inpstart 7 0 0
+S reg0 7 0 -1
+S reg1 7 0 -2
+S regchk 7 0 -3
+
+S inpstart 8 0 0
+S reg1 8 0 -1
+S reg1 8 0 -2
+S regchk 8 0 -3
+
+S anddef 9 0 0
+S gatestart 9 0 1
+
+S outstart 10 0 0
+S reg1 10 0 -1
+S reg0 10 0 -2
+S reg1 10 0 -3
+S regchk 10 0 -4
+
+======= AND 1,3 -> 2; NAND 2,4 -> 2
+S inpstart 11 0 0
+S reg1 11 0 -1
+S regchk 11 0 -2
+
+S inpstart 12 0 0
+S reg1 12 0 -1
+S reg1 12 0 -2
+S regchk 12 0 -3
+
+S anddef 13 0 0
+S gatestart 13 0 1
+
+S outstart 14 0 0
+S reg0 14 0 -1
+S reg1 14 0 -2
+S regchk 14 0 -3
+
+S inpstart 15 0 0
+S reg0 15 0 -1
+S reg1 15 0 -2
+S regchk 15 0 -3
+
+S inpstart 16 0 0
+S reg0 16 0 -1
+S reg0 16 0 -2
+S reg1 16 0 -3
+S regchk 16 0 -4
+
+S nanddef 17 0 0
+S gatestart 17 0 1
+
+S outstart 18 0 0
+S reg0 18 0 -1
+S reg1 18 0 -2
+S regchk 18 0 -3
+
+======= OR 3,4 -> 4
+S inpstart 19 0 0
+S reg1 19 0 -1
+S reg1 19 0 -2
+S regchk 19 0 -3
+
+S inpstart 20 0 0
+S reg0 20 0 -1
+S reg0 20 0 -2
+S reg1 20 0 -3
+S regchk 20 0 -4
+
+S ordef 21 0 0
+S gatestart 21 0 1
+
+S outstart 22 0 0
+S reg0 22 0 -1
+S reg0 22 0 -2
+S reg1 22 0 -3
+S regchk 22 0 -4
+
+======= OR 1,5 -> 3
+S inpstart 23 0 0
+S reg1 23 0 -1
+S regchk 23 0 -2
+
+S inpstart 24 0 0
+S reg1 24 0 -1
+S reg0 24 0 -2
+S reg1 24 0 -3
+S regchk 24 0 -4
+
+S ordef 25 0 0
+S gatestart 25 0 1
+
+S outstart 26 0 0
+S reg1 26 0 -1
+S reg1 26 0 -2
+S regchk 26 0 -3
+
+======= NAND 2,3 -> 3
+S inpstart 27 0 0
+S reg0 27 0 -1
+S reg1 27 0 -2
+S regchk 27 0 -3
+
+S inpstart 28 0 0
+S reg1 28 0 -1
+S reg1 28 0 -2
+S regchk 28 0 -3
+
+S nanddef 29 0 0
+S gatestart 29 0 1
+
+S outstart 30 0 0
+S reg1 30 0 -1
+S reg1 30 0 -2
+S regchk 30 0 -3
+
+
+======= Check y1 = 0
+S check0 31 0 1
+S checkstart 31 0 0
+S reg1 31 0 -1
+S reg1 31 0 -2
+S regchk 31 0 -3
+S checkbuffer 32 0 0
+
+======= Check y2 = 1
+S check1 33 0 1
+S checkstart 33 0 0
+S reg0 33 0 -1
+S reg0 33 0 -2
+S reg1 33 0 -3
+S regchk 33 0 -4
+S checkbuffer 34 0 0
+
+
+S defend 35 0 0
