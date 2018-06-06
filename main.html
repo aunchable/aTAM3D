@@ -76,6 +76,11 @@
 					} else if (j === 5) {
 						text = tile.tiletype.down;
 					}
+
+                    if (text === '-') {
+                        text = ' ';
+                    }
+                    
 					g.fillText(text, bitmap.width / 2, bitmap.height / 2);
 
 					var texture = new THREE.Texture(bitmap);
@@ -100,7 +105,7 @@
 
 			function clearThree(threeobj){
 				// TODO unclear if this actually clears memory
-				while(threeobj.children.length > 0){ 
+				while(threeobj.children.length > 0){
 				clearThree(threeobj.children[0])
 				threeobj.remove(threeobj.children[0]);
 				}
@@ -115,7 +120,7 @@
 					} else{
 						threeobj.material.dispose()
 					}
-				} 
+				}
 				if(threeobj.texture) threeobj.texture.dispose()
 			}
 

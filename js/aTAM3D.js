@@ -269,15 +269,19 @@ TileType = function(name, bonds, color) {
   this.name = name;
 
   if (color === 'R') {
-    this.color = '#ff0000';
+    this.color = '#e6b9b8';
   } else if (color === 'G') {
-    this.color = '#00ff00';
+    this.color = '#d7e4bd';
   } else if (color === 'B') {
-    this.color = '#0000ff';
+    this.color = '#b9cde5';
   } else if (color === 'Y') {
-    this.color = '#ffff00';
+    this.color = '#ffffa0';
+  } else if (color === 'O') {
+    this.color = '#fcd5b5';
+} else if (color === 'P') {
+    this.color = '#ccc1da';
   } else if (color === 'gray') {
-    this.color = '#666666';
+    this.color = '#bfbfbf';
   }
 
   this.bonds = bonds;
