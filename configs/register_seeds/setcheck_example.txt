@@ -1,6 +1,6 @@
 S argdef 0 0 0
 S reg1 0 0 -1
-S regchk 0 0 -3
+S regchk 0 0 -2
 
 S set0 1 0 1
 S setdef 1 0 0
