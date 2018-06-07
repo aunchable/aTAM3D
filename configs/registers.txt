@@ -66,7 +66,7 @@ B H H 1
 # Function Output
 T outdef B OO DD - DD - reg
 T outstartdec gray O H OO H OUTC dec
-T outendchk B OO H O H OUTC nchk
+T outendchk gray OO H O H OUTC nchk
 T outendmark Y O* H O H OUTM chk
 T outcopy gray O* H O* H OUTC -
 
@@ -81,7 +81,7 @@ B OUTM OUTM 2
 # Check units
 T checkdef B CC DD - DD CHK reg
 T checkstartdec gray C H CC H CHKC dec
-T checkendchk B CC H C H CHKC nchk
+T checkendchk gray CC H C H CHKC nchk
 T checkendmark Y C* H C H CHKM chk
 T checkcopy gray C* H C* H CHKC -
 T checkbit0 R PC0 - - - - CHK
@@ -104,7 +104,7 @@ B CHKB CHKB 2
 # Set bit
 T setdef B SS DD Set DD SET -
 T setstartdec gray S H SS H SETC dec
-T setendchk B SS H S H SETC nchk
+T setendchk gray SS H S H SETC nchk
 T setendmark Y S* H S H SETM chk
 T setcopy gray S* H S* H SETC -
 
@@ -122,31 +122,31 @@ B GATE GATE 3
 
 # NOT gate
 T notdef B notb DD Not DD GATE -
-T notboard B notb H notb H not -
+T notboard gray notb H notb H not -
 B notb notb 2
 B not not 1
 
 # AND gate
 T anddef B andb DD And DD GATE -
-T andboard B andb H andb H and -
+T andboard gray andb H andb H and -
 B andb andb 2
 B and and 1
 
 # OR gate
 T ordef B orb DD Or DD GATE -
-T orboard B orb H orb H or -
+T orboard gray orb H orb H or -
 B orb orb 2
 B or or 1
 
 # NAND gate
 T nanddef B nandb DD Nand DD GATE -
-T nandboard B nandb H nandb H nand -
+T nandboard gray nandb H nandb H nand -
 B nandb nandb 2
 B nand nand 1
 
 # NOR gate
 T nordef B norb DD Nor DD GATE -
-T norboard B norb H norb H nor -
+T norboard gray norb H norb H nor -
 B norb norb 2
 B nor nor 1
 
