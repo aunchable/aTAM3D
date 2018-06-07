@@ -1,0 +1,27 @@
+S argdef 0 0 0
+S reg1 0 0 -1
+S regchk 0 0 -3
+
+S set0 1 0 1
+S setdef 1 0 0
+S reg1 1 0 -1
+S regchk 1 0 -2
+
+S checkbit0 2 0 1
+S checkdef 2 0 0
+S reg1 2 0 -1
+S regchk 2 0 -2
+S checkdef2 3 0 0
+
+S set1 4 0 1
+S setdef 4 0 0
+S reg1 4 0 -1
+S regchk 4 0 -2
+
+S checkbit0 5 0 1
+S checkdef 5 0 0
+S reg1 5 0 -1
+S regchk 5 0 -2
+S checkdef2 6 0 0
+
+S enddef 7 0 0

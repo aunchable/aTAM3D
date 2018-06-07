@@ -1,0 +1,23 @@
+S argdef 0 0 0
+S reg0 0 0 -1
+S reg1 0 0 -2
+S regchk 0 0 -3
+
+S inputdef 1 0 0
+S reg1 1 0 -1
+S regchk 1 0 -2
+
+S inputdef 2 0 0
+S reg0 2 0 -1
+S reg1 2 0 -2
+S regchk 2 0 -3
+
+S anddef 3 0 0
+S gatestart 3 0 1
+
+S outdef 4 0 0
+S reg0 4 0 -1
+S reg1 4 0 -2
+S regchk 4 0 -3
+
+S enddef 5 0 0

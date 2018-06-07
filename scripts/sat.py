@@ -25,12 +25,12 @@ for token in tokens:
         currx += 1
 
     elif token == ')':
-        seed.append('S check1 ' + str(currx) + ' 0 1')
-        seed.append('S checkstart ' + str(currx) + ' 0 0')
+        seed.append('S checkbit1 ' + str(currx) + ' 0 1')
+        seed.append('S checkdef ' + str(currx) + ' 0 0')
         seed = seed + reg_seed(currx, 1)
         currx += 1
 
-        seed.append('S checkbuffer ' + str(currx) + ' 0 0')
+        seed.append('S checkdef2 ' + str(currx) + ' 0 0')
         currx += 1
 
     elif token == 'v' or token == '^':
@@ -43,7 +43,7 @@ for token in tokens:
             if reg > numRegisters:
                 numRegisters = reg
 
-            seed.append('S inpstart ' + str(currx) + ' 0 0')
+            seed.append('S inputdef ' + str(currx) + ' 0 0')
             seed = seed + reg_seed(currx, reg)
             currx += 1
 
@@ -51,7 +51,7 @@ for token in tokens:
             seed.append('S notdef ' + str(currx) + ' 0 0')
             currx += 1
 
-            seed.append('S outstart ' + str(currx) + ' 0 0')
+            seed.append('S outdef ' + str(currx) + ' 0 0')
             seed = seed + reg_seed(currx, 2)
             currx += 1
 
@@ -62,11 +62,11 @@ for token in tokens:
             if reg > numRegisters:
                 numRegisters = reg
 
-        seed.append('S inpstart ' + str(currx) + ' 0 0')
+        seed.append('S inputdef ' + str(currx) + ' 0 0')
         seed = seed + reg_seed(currx, 1)
         currx += 1
 
-        seed.append('S inpstart ' + str(currx) + ' 0 0')
+        seed.append('S inputdef ' + str(currx) + ' 0 0')
         seed = seed + reg_seed(currx, reg)
         currx += 1
 
@@ -74,13 +74,13 @@ for token in tokens:
         seed.append('S gatestart ' + str(currx) + ' 0 1')
         currx += 1
 
-        seed.append('S outstart ' + str(currx) + ' 0 0')
+        seed.append('S outdef ' + str(currx) + ' 0 0')
         seed = seed + reg_seed(currx, 1)
         currx += 1
 
-seed.append('S defend ' + str(currx) + ' 0 0')
+seed.append('S enddef ' + str(currx) + ' 0 0')
 
-seed.append('S defstart 0 0 0')
+seed.append('S argdef 0 0 0')
 seed = seed + reg_seed(0, numRegisters)
 
 print('\n'.join(seed))
