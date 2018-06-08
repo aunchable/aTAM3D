@@ -126,6 +126,12 @@ T notboard gray notb H notb H not -
 B notb notb 2
 B not not 1
 
+# FORK gate
+T forkdef B forkb DD Fork DD GATE -
+T forkboard gray notb H forkb H fork -
+B forkb forkb 2
+B fork fork 1
+
 # AND gate
 T anddef B andb DD And DD GATE -
 T andboard gray andb H andb H and -
@@ -256,6 +262,13 @@ T not0 R P 0 P 0 - not
 T not1 G P 1 P 1 - not
 T not0* R SIG1 0 P 0* - not
 T not1* G SIG0 1 P 1* - not
+
+# FORK gate
+T forkblk gray P blk P blk - fork
+T fork0 R P 0 P 0 - fork
+T fork1 G P 1 P 1 - fork
+T fork0* R SIG0 0 P 0* - fork
+T fork1* G SIG1 1 P 1* - fork
 
 
 # AND gate
