@@ -1,3 +1,350 @@
+P 3
+
+#### Register Operation
+
+T reg0 R r0 - - - reg reg
+T reg1 G r1 - - - reg reg
+T regchk O B - - - reg -
+T dec0 G r1 - r0 - dec dec
+T dec1 R r0 - r1 - dec ndec
+T keep0 R r0 - r0 - ndec ndec
+T keep1 G r1 - r1 - ndec ndec
+T chk0 Y r0 - r0 - chk chk
+T chk1 G r1 - r1 - nchk chk
+T nchk0 R r0 - r0 - nchk nchk
+T nchk1 G r1 - r1 - nchk nchk
+T enddec O BB - B - ndec -
+T startchk O B - BB - chk -
+
+B r0 r0 2
+B r1 r1 2
+
+B reg reg 3
+B BB BB 3
+B B B 2
+
+B dec dec 1
+B ndec ndec 1
+B chk chk 1
+B nchk nchk 1
+
+
+#### Board Definition Operation
+
+# Arguments
+T argdef B DD DD - - - reg
+T argstartdec gray D H DD - argB dec
+T argendchk1 Y DD H D - arg nchk
+T argendchk2 Y - H D - arg chk
+
+# Final check
+T enddef B CORRECT - - DD - -
+T success Y - - CORRECT H - -
+
+B DD DD 3
+B D D 2
+B arg arg 3
+B argB argB 3
+B CORRECT CORRECT 2
+
+# Function Input
+T inputdef B II DD - DD - reg
+T inputstartdec gray I H II H INPC dec
+T inputendchk gray II H I H INPC nchk
+T inputendmark Y I* H I H INPM chk
+T inputcopy gray I* H I* H INPC -
+
+B I* I* 2
+B II II 2
+B I I 1
+
+B INPC INPC 2
+B INPM INPM 2
+B H H 1
+
+
+# Function Output
+T outdef B OO DD - DD - reg
+T outstartdec gray O H OO H OUTC dec
+T outendchk gray OO H O H OUTC nchk
+T outendmark Y O* H O H OUTM chk
+T outcopy gray O* H O* H OUTC -
+
+B O* O* 2
+B OO OO 2
+B O O 1
+
+B OUTC OUTC 1
+B OUTM OUTM 2
+
+
+# Check units
+T checkdef B CC DD - DD CHK reg
+T checkstartdec gray C H CC H CHKC dec
+T checkendchk gray CC H C H CHKC nchk
+T checkendmark Y C* H C H CHKM chk
+T checkcopy gray C* H C* H CHKC -
+T checkbit0 R PC0 - - - - CHK
+T checkbit1 G PC1 - - - - CHK
+
+B C* C* 2
+B CC CC 2
+B C C 1
+
+B CHK CHK 3
+B CHKC CHKC 1
+B CHKM CHKM 1
+
+T checkdef2 B - DD - DD - -
+T checkbuff gray - H - H CHKB -
+
+B CHKB CHKB 2
+
+
+# Set bit
+T setdef B SS DD Set DD SET -
+T setstartdec gray S H SS H SETC dec
+T setendchk gray SS H S H SETC nchk
+T setendmark Y S* H S H SETM chk
+T setcopy gray S* H S* H SETC -
+
+B S* S* 2
+B SS SS 2
+B S S 1
+
+B SET SET 3
+B SETC SETC 1
+B SETM SETM 2
+
+
+# Gates
+B GATE GATE 3
+
+# NOT gate
+T notdef B notb DD Not DD GATE -
+T notboard gray notb H notb H not -
+B notb notb 2
+B not not 1
+
+# AND gate
+T anddef B andb DD And DD GATE -
+T andboard gray andb H andb H and -
+B andb andb 2
+B and and 1
+
+# OR gate
+T ordef B orb DD Or DD GATE -
+T orboard gray orb H orb H or -
+B orb orb 2
+B or or 1
+
+# NAND gate
+T nanddef B nandb DD Nand DD GATE -
+T nandboard gray nandb H nandb H nand -
+B nandb nandb 2
+B nand nand 1
+
+# NOR gate
+T nordef B norb DD Nor DD GATE -
+T norboard gray norb H norb H nor -
+B norb norb 2
+B nor nor 1
+
+
+#### Variable Operation
+
+# Arguments
+T arg0 R - 0 - - - arg
+T arg1 G - 1 - - - arg
+T argblk gray - blk - - - argB
+
+
+# Input
+T input0 R - 0 - 0 - INPC
+T input1 G - 1 - 1 - INPC
+T input0* R - 0* - 0* - INPC
+T input1* G - 1* - 1* - INPC
+T inputblk gray - blk - blk - INPC
+T inputmark0 R - 0* - 0 - INPM
+T inputmark1 G - 1* - 1 - INPM
+
+B 0 0 1
+B 1 1 1
+B 0* 0* 1
+B 1* 1* 1
+B blk blk 1
+
+
+# Output
+T outread0 gray N0 blk N0 OUT0 - -
+T outread1 gray N1 blk N1 OUT1 - -
+T out00 R N0 0 N0 0 - OUTC
+T out10 G N0 1 N0 1 - OUTC
+T out01 R N1 0 N1 0 - OUTC
+T out11 G N1 1 N1 1 - OUTC
+T outblk0 gray N0 blk N0 blk - OUTC
+T outblk1 gray N1 blk N1 blk - OUTC
+T outmark0 R N0 0 N0 - - OUTM
+T outmark1 G N1 1 N1 - - OUTM
+
+B OUT0 OUT0 3
+B OUT1 OUT1 3
+B N0 N0 1
+B N1 N1 1
+
+
+# Check
+T checkblk0 gray PC0 blk PC0 blk - CHKC
+T checkbit00 R PC0 0 PC0 0 - CHKC
+T checkbit10 G PC0 1 PC0 1 - CHKC
+T checkblk1 gray PC1 blk PC1 blk - CHKC
+T checkbit01 R PC1 0 PC1 0 - CHKC
+T checkbit11 G PC1 1 PC1 1 - CHKC
+T checkblk gray PC blk PC blk - CHKC
+T check0 R PC 0 PC 0 - CHKC
+T check1 G PC 1 PC 1 - CHKC
+
+T checkmark0 R CHKT 0 PC0 0 - CHKM
+T checkmark1 G CHKT 1 PC1 1 - CHKM
+T checkcontinue P PC TRUE CHKT - - -
+
+B PC PC 1
+B PC0 PC0 1
+B PC1 PC1 1
+B CHKT CHKT 3
+B TRUE TRUE 3
+
+T checkread gray CHKP blk CHKP TRUE - CHKB
+T checkbuff0 R CHKP 0 CHKP 0 - CHKB
+T checkbuff1 G CHKP 1 CHKP 1 - CHKB
+T checkbuffblk gray CHKP blk CHKP blk - CHKB
+
+B CHKP CHKP 2
+
+
+# Set
+T set0 R S0 - - - - SET
+T set1 G S1 - - - - SET
+T setblk0 gray S0 blk S0 blk - SETC
+T set00 R S0 0 S0 0 - SETC
+T set10 G S0 1 S0 1 - SETC
+T setmark0 R S0 0 S0 - - SETM
+T setblk1 gray S1 blk S1 blk - SETC
+T set01 R S1 0 S1 0 - SETC
+T set11 G S1 1 S1 1 - SETC
+T setmark1 G S1 1 S1 - - SETM
+
+B S0 S0 1
+B S1 S1 1
+
+
+# Gate generals
+T gatestart B P - - - - GATE
+T out0 P P OUT0 SIG0 - - -
+T out1 P P OUT1 SIG1 - - -
+
+B P P 1
+B P0 P0 1
+B P1 P1 1
+B SIG0 SIG0 3
+B SIG1 SIG1 3
+
+
+# NOT gate
+T notblk gray P blk P blk - not
+T not0 R P 0 P 0 - not
+T not1 G P 1 P 1 - not
+T not0* R SIG1 0 P 0* - not
+T not1* G SIG0 1 P 1* - not
+
+
+# AND gate
+T andblk gray P blk P blk - and
+T and0 R P 0 P 0 - and
+T and1 G P 1 P 1 - and
+
+T and0* R P0 0 P 0* - and
+T and1* G P1 1 P 1* - and
+
+T andblk0 gray P0 blk P0 blk - and
+T and00 R P0 0 P0 0 - and
+T and10 G P0 1 P0 1 - and
+T andblk1 gray P1 blk P1 blk - and
+T and01 R P1 0 P1 0 - and
+T and11 G P1 1 P1 1 - and
+
+T and0*0 R SIG0 0 P0 0* - and
+T and0*1 R SIG0 0 P1 0* - and
+T and1*0 G SIG0 1 P0 1* - and
+T and1*1 G SIG1 1 P1 1* - and
+
+
+# OR gate
+T orblk gray P blk P blk - or
+T or0 R P 0 P 0 - or
+T or1 G P 1 P 1 - or
+
+T or0* R P0 0 P 0* - or
+T or1* G P1 1 P 1* - or
+
+T orblk0 gray P0 blk P0 blk - or
+T or00 R P0 0 P0 0 - or
+T or10 G P0 1 P0 1 - or
+T orblk1 gray P1 blk P1 blk - or
+T or01 R P1 0 P1 0 - or
+T or111 G P1 1 P1 1 - or
+
+T or0*0 R SIG0 0 P0 0* - or
+T or0*1 R SIG1 0 P1 0* - or
+T or1*0 G SIG1 1 P0 1* - or
+T or1*1 G SIG1 1 P1 1* - or
+
+
+# NAND gate
+T nandblk gray P blk P blk - nand
+T nand0 R P 0 P 0 - nand
+T nand1 G P 1 P 1 - nand
+
+T nand0* R P0 0 P 0* - nand
+T nand1* G P1 1 P 1* - nand
+
+T nandblk0 gray P0 blk P0 blk - nand
+T nand00 R P0 0 P0 0 - nand
+T nand10 G P0 1 P0 1 - nand
+T nandblk1 gray P1 blk P1 blk - nand
+T nand01 R P1 0 P1 0 - nand
+T nand11 G P1 1 P1 1 - nand
+
+T nand0*0 R SIG1 0 P0 0* - nand
+T nand0*1 R SIG1 0 P1 0* - nand
+T nand1*0 G SIG1 1 P0 1* - nand
+T nand1*1 G SIG0 1 P1 1* - nand
+
+
+# NOR gate
+T norblk gray P blk P blk - nor
+T nor0 R P 0 P 0 - nor
+T nor1 G P 1 P 1 - nor
+
+T nor0* R P0 0 P 0* - nor
+T nor1* G P1 1 P 1* - nor
+
+T norblk0 gray P0 blk P0 blk - nor
+T nor00 R P0 0 P0 0 - nor
+T nor10 G P0 1 P0 1 - nor
+T norblk1 gray P1 blk P1 blk - nor
+T nor01 R P1 0 P1 0 - nor
+T nor11 G P1 1 P1 1 - nor
+
+T nor0*0 R SIG1 0 P0 0* - nor
+T nor0*1 R SIG0 0 P1 0* - nor
+T nor1*0 G SIG0 1 P0 1* - nor
+T nor1*1 G SIG0 1 P1 1* - nor
+
+
+# Seed [PASTE SEED BELOW]
+
+
 S argdef 0 0 0
 S reg1 0 0 -1
 S regchk 0 0 -2
