@@ -1,0 +1,246 @@
+P 3
+
+# Polynomial Definition
+T pdStartReg A - DEF DEF - - -
+T pdRegStart A CHK2 DEF - DEF reg CARG
+T pdRegBuff A BUFFCOPY DEF - DEF - - -
+
+T pdStartSum A DEF DEF DEF - CAPSTART -
+T pdCstart B C C C C - CAPSTART
+T pdInClause A - DEF - DEF CSUM CARG
+T pdEndClause A - DEF - DEF ASUM CARG
+
+T pdStartDef A DEF DEF - - - -
+T pdCoeff A - DEF F1 DEF COEFF -
+T pdArg A - DEF ROT DEF CAPSTART RARG
+T pdContClause A  - DEF - DEF CTURN -
+T pdMult A - DEF RS DEF - -
+T pdEndClause A - DEF - DEF CNORTH -
+
+T pdDefCap A - - - DEF - -
+
+B DEF DEF 3
+B CAPSTART CAPSTART 3
+
+
+# Arguments
+T argDef A DEF hor DEF - - ARG
+T argDefBlank A DEF hor DEF - - -
+T argDefCap A - - DEF - - -
+T arg0 R - a0 - - ARG ARG
+T arg1 G - a1 - - ARG ARG
+T argC B - aC - - ARG -
+
+B hor hor 1
+B ARG ARG 3
+B a0 a0 1
+B a1 a1 1
+B aC aC 1
+
+T argbuffcopy A BUFFCOPY hor BUFFCOPY hor - CEAST
+T argbuffcopy0 R - a0 - a0 CEAST CEAST
+T argbuffcopy1 G - a1 - a1 CEAST CEAST
+T argbuffcopyC B - aC - aC CEAST -
+
+B BUFFCOPY BUFFCOPY 2
+B CEAST CEAST 2
+
+T argMark0 R a0m a0 a0m a0 REGM REGM
+T argMark1 G a1m a1 a1m a1 REGM REGM
+T argMarkC B aCm aC aCm aC REGM -
+
+T argBlank0 A a0m - a0m - REGB REGB
+T argBlank1 A a1m - a1m - REGB REGB
+T argBlankC A aCm - aCm - REGB -
+
+T argCopy0m0 R a0m a0 a0m a0 REGC REGC
+T argCopy0m1 G a0m a1 a0m a1 REGC REGC
+T argCopy0mC B a0m aC a0m aC REGC REGC*
+T argCopy1m0 R a1m a0 a1m a0 REGC REGC
+T argCopy1m1 G a1m a1 a1m a1 REGC REGC
+T argCopy1mC B a1m aC a1m aC REGC REGC*
+T argCopyCm0 R aCm a0 aCm a0 REGC REGC**
+T argCopyCm1 G aCm a1 aCm a1 REGC REGC**
+T argCopyCmC B aCm aC aCm aC REGC -
+
+T argCopy0mN B a0m - a0m - REGC* REGC*
+T argCopy1mN B a1m - a1m - REGC* REGC*
+T argCopyCmN B aCm - aCm - REGC* -
+T argCopyNm0 R - a0 - a0 REGC** REGC**
+T argCopyNm1 G - a1 - a1 REGC** REGC**
+T argCopyNmC B - aC - aC REGC** -
+
+B a0m a0m 1
+B a1m a1m 1
+B aCm aCm 1
+
+B REGC* REGC* 2
+B REGC** REGC** 2
+
+T argCopy0m R a0m - a0m - CARG CARG
+T argCopy1m G a1m - a1m - CARG CARG
+T argCopyCm B aCm - aCm - CARG -
+
+B CARG CARG 2
+
+
+# Registers
+T reg0 R r0 - - - reg reg
+T reg1 G r1 - - - reg reg
+T regchk O REG2 - - - - reg
+T dec0 G r1 - r0 - dec dec
+T dec1 R r0 - r1 - ndec dec
+T keep0 R r0 - r0 - ndec ndec
+T keep1 G r1 - r1 - ndec ndec
+T chk0 P r0 - r0 - chk chk
+T chk1 G r1 - r1 - chk nchk
+T nchk0 R r0 - r0 - nchk nchk
+T nchk1 G r1 - r1 - nchk nchk
+T enddec O REG3 - REG2 - - ndec
+T startchk O REG2 - REG3 - - chk
+T regStartDec A CHK1 hor CHK2 hor dec REGB
+T regEndChk A CHK2 hor CHK1 hor nchk REGC
+T regEndMark Y CHK* hor CHK1 hor chk REGM
+T regCopy1 A CHK* hor CHK** hor - REGC
+T regCopy2 A CHK** hor CHK* hor - REGB
+
+B r0 r0 2
+B r1 r1 2
+
+B reg reg 3
+B REG3 REG3 3
+B REG2 REG2 2
+
+B dec dec 1
+B ndec ndec 1
+B chk chk 1
+B nchk nchk 1
+
+B CHK1 CHK1 1
+B CHK2 CHK2 2
+B CHK* CHK* 2
+B CHK** CHK** 2
+B REGB REGB 2
+B REGC REGC 1
+B REGM REGM 2
+
+
+# Rotation
+T rotCopy0m R a0m - r0 - RARG RARG
+T rotCopy1m G a1m - r1 - RARG RARG
+T rotCopyCm B aCm - rC - RARG -
+
+T rotStart B rC - - - rC* -
+
+T rotCont0C R r0 - rC - r0* rC*
+T rotCont1C G r1 - rC - r1* rC*
+
+T rotCont00 R r0 - r0 - r0* r0*
+T rotCont01 R r0 - r1 - r0* r1*
+T rotCont10 G r1 - r0 - r1* r0*
+T rotCont11 G r1 - r1 - r1* r1*
+
+T rotEnd0 R ROT - ROT f p0 r0*
+T rotEnd1 G ROT - ROT f p1 r1*
+T rotEndC B ROT - - - pC rC*
+
+
+B RARG RARG 2
+B rC rC 3
+B r0 r0 2
+B r1 r1 2
+B rC* rC* 1
+B r0* r0* 1
+B r1* r1* 1
+
+B ROT ROT 2
+
+
+# Right shifting
+T shift1 A F1 f F2 - CNORTH -
+T shift2 A F2 f F2 - RSHIFT0 -
+
+T copyNorth0 R c0 c0 c0 - CNORTH CNORTH
+T copyNorth1 G c1 c1 c1 - CNORTH CNORTH
+T copyNorthC B cC cC cC - - CNORTH
+
+T shift0up0 R c0 c0 c0 - RSHIFT0 RSHIFT0
+T shift0up1 R c1 c0 c0 - RSHIFT1 RSHIFT0
+T shift0upC R cC c0 c0 - RSHIFTC RSHIFT0
+T shift1up0 G c0 c1 c1 - RSHIFT0 RSHIFT1
+T shift1up1 G c1 c1 c1 - RSHIFT1 RSHIFT1
+T shift1upC G cC c1 c1 - RSHIFTC RSHIFT1
+T shiftC B - cC cC - - RSHIFTC
+
+B F1 F1 2
+B F2 F2 2
+B f f 1
+
+B CNORTH CNORTH 2
+B RSHIFT0 RSHIFT0 2
+B RSHIFT1 RSHIFT1 2
+B RSHIFTC RSHIFTC 3
+
+# Addition
+
+
+# Clause Computation
+T coeff0 R - - c0 - COEFF COEFF
+T coeff1 G - - c1 - COEFF COEFF
+T coeffC B - - cC - - COEFF
+
+B COEFF COEFF 3
+B c0 c0 1
+B c1 c1 1
+B cC cC 1
+
+
+# Sum of Clauses Computation
+
+
+# Seed
+S pdStartReg 0 1 0
+S pdStartSum 0 0 0
+S pdStartDef 0 -1 0
+#S pdCstart 0 0 1
+
+S argDefBlank 0 2 0
+S argDef 0 3 0
+S arg0 0 3 -1
+S arg1 0 3 -2
+S argC 0 3 -3
+
+S argDefBlank 0 4 0
+S argDef 0 5 0
+S arg1 0 5 -1
+S arg1 0 5 -2
+S arg0 0 5 -3
+S arg1 0 5 -4
+S argC 0 5 -5
+
+S argDefCap 0 6 0
+
+
+# 4
+S pdRegBuff 1 1 0
+S pdInClause 1 0 0
+S pdCoeff 1 -1 0
+
+S coeff0 1 -1 1
+S coeff0 1 -1 2
+S coeff1 1 -1 3
+S coeffC 1 -1 4
+
+# *x2
+S pdRegStart 2 1 0
+S pdInClause 2 0 0
+S pdArg 2 -1 0
+
+S reg0 2 1 1
+S reg1 2 1 2
+S regchk 2 1 3
+
+# .
+S pdDefCap 3 1 0
+S pdDefCap 3 0 0
+S pdDefCap 3 -1 0

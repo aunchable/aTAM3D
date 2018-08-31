@@ -280,7 +280,7 @@ TileType = function(name, bonds, color) {
     this.color = '#fcd5b5';
 } else if (color === 'P') {
     this.color = '#ccc1da';
-  } else if (color === 'gray') {
+  } else if (color === 'A') {
     this.color = '#bfbfbf';
   }
 
