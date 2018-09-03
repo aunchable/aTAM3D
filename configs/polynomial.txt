@@ -1,3 +1,5 @@
+# 153 tile types, 65 bond types
+
 P 3
 
 # Polynomial Definition
@@ -5,21 +7,23 @@ T pdStartReg A - DEF DEF - - -
 T pdRegStart A CHK2 DEF - DEF reg CARG
 T pdRegBuff A BUFFCOPY DEF - DEF - - -
 
-T pdStartSum A DEF DEF DEF - CAPSTART -
-T pdCstart B C C C C - CAPSTART
+T pdStartSum A DEF DEF DEF - CAPSUM -
+T pdCSum B - cC - - - CAPSUM
 T pdInClause A - DEF - DEF CSUM CARG
-T pdEndClause A - DEF - DEF ASUM CARG
+T pdSumClause A - DEF - DEF q0 CARG
 
 T pdStartDef A DEF DEF - - - -
 T pdCoeff A - DEF F1 DEF COEFF -
 T pdArg A - DEF ROT DEF CAPSTART RARG
-T pdContClause A  - DEF - DEF CTURN -
-T pdMult A - DEF RS DEF - -
-T pdEndClause A - DEF - DEF CNORTH -
+T pdCstart B - - cC - - CAPSTART
+T pdContClause A - DEF GET DEF CNORTH -
+T pdMult A - DEF F1 DEF TURN -
+T pdEndClause A - DEF GET DEF CNORTH -
 
 T pdDefCap A - - - DEF - -
 
 B DEF DEF 3
+B CAPSUM CAPSUM 3
 B CAPSTART CAPSTART 3
 
 
@@ -140,10 +144,9 @@ T rotCont01 R r0 - r1 - r0* r1*
 T rotCont10 G r1 - r0 - r1* r0*
 T rotCont11 G r1 - r1 - r1* r1*
 
-T rotEnd0 R ROT - ROT f p0 r0*
-T rotEnd1 G ROT - ROT f p1 r1*
-T rotEndC B ROT - - - pC rC*
-
+T rotEnd0 R ROT f ROT f CNORTH r0*
+T rotEnd1 G ROT f ROT f p0 r1*
+T rotEndC B ROT fp - - CNORTH rC*
 
 B RARG RARG 2
 B rC rC 3
@@ -181,7 +184,51 @@ B RSHIFT0 RSHIFT0 2
 B RSHIFT1 RSHIFT1 2
 B RSHIFTC RSHIFTC 3
 
-# Addition
+
+# Addition South
+# arg1 is north, arg2 is west, output is south
+T 00p0o0 R c0 - c0 c0 p0 p0
+T 00p1o1 G c0 - c1 c0 p0 p1
+T 01p0o1 G c0 - c1 c1 p0 p0
+T 01p1o0 R c0 - c0 c1 p1 p1
+T 10p0o1 G c1 - c1 c0 p0 p0
+T 10p1o0 R c1 - c0 c0 p1 p1
+T 11p0o0 R c1 - c0 c1 p1 p0
+T 11p1o1 G c1 - c1 c1 p1 p1
+
+T C0p0o0 R cC - c0 c0 pp0 p0
+T C0p1o1 G cC - c1 c0 pp0 p1
+T C1p0o1 G cC - c1 c1 pp0 p0
+T C1p1o0 R cC - c0 c1 pp1 p1
+T 0Cp0o0 R c0 - c0 cC pp0 p0
+T 0Cp1o1 G c0 - c1 cC pp0 p1
+T 1Cp0o1 G c1 - c1 cC pp0 p0
+T 1Cp1o0 R c1 - c0 cC pp1 p1
+T CCp0oC B cC - cC cC - p0
+T CCp1o1 G cC - c1 cC ppC p1
+
+T 0pp0o0 R c0 - c0 c0 pp0 pp0
+T 0pp1o1 G c0 - c1 c0 pp0 pp1
+T 1pp0o1 G c1 - c1 c1 pp0 pp0
+T 1pp1o0 R c1 - c0 c1 pp1 pp1
+T Cpp0oC B cC - cC cC - pp0
+T Cpp1o1 G cC - c1 cC ppC pp1
+
+T ppCoC B - - cC - - ppC
+
+B p0 p0 1
+B p1 p1 1
+B pp0 pp0 2
+B pp1 pp1 2
+B ppC ppC 3
+
+
+# Turn (west to north/south)
+T turn0 R c0 - c0 c0 TURN TURN
+T turn1 G c1 - c1 c1 TURN TURN
+T turnC B cC - cC cC - TURN
+
+B TURN TURN 2
 
 
 # Clause Computation
@@ -194,22 +241,74 @@ B c0 c0 1
 B c1 c1 1
 B cC cC 1
 
+T getresult A GET - GET f CNORTH -
+T turnresult A GET - - fp TURN -
+
+B GET GET 2
+B fp fp 1
+
 
 # Sum of Clauses Computation
+T copySum0 R - c0 - c0 CSUM CSUM
+T copySum1 G - c1 - c1 CSUM CSUM
+T copySumC B - cC - cC - CSUM
+
+B CSUM CSUM 2
+
+# Addition East
+# arg1 is west, arg2 is south, output is east
+T 00q0o0 R - c0 c0 c0 q0 q0
+T 00q1o1 G - c1 c0 c0 q0 q1
+T 01q0o1 G - c1 c1 c0 q0 q0
+T 01q1o0 R - c0 c1 c0 q1 q1
+T 10q0o1 G - c1 c0 c1 q0 q0
+T 10q1o0 R - c0 c0 c1 q1 q1
+T 11q0o0 R - c0 c1 c1 q1 q0
+T 11q1o1 G - c1 c1 c1 q1 q1
+
+T C0q0o0 R - c0 c0 cC qq0 q0
+T C0q1o1 G - c1 c0 cC qq0 q1
+T C1q0o1 G - c1 c1 cC qq0 q0
+T C1q1o0 R - c0 c1 cC qq1 q1
+T 0Cq0o0 R - c0 cC c0 qq0 q0
+T 0Cq1o1 G - c1 cC c0 qq0 q1
+T 1Cq0o1 G - c1 cC c1 qq0 q0
+T 1Cq1o0 R - c0 cC c1 qq1 q1
+T CCq0oC B - cC cC cC - q0
+T CCq1o1 G - c1 cC cC qqC q1
+
+T 0qq0o0 R - c0 c0 c0 qq0 qq0
+T 0qq1o1 G - c1 c0 c0 qq0 qq1
+T 1qq0o1 G - c1 c1 c1 qq0 qq0
+T 1qq1o0 R - c0 c1 c1 qq1 qq1
+T Cqq0oC B - cC cC cC - qq0
+T Cqq1o1 G - c1 cC cC qqC qq1
+
+T qqCoC B - cC - - - qqC
+
+B q0 q0 1
+B q1 q1 1
+B qq0 qq0 2
+B qq1 qq1 2
+B qqC qqC 3
 
 
+
+############################################
 # Seed
 S pdStartReg 0 1 0
 S pdStartSum 0 0 0
 S pdStartDef 0 -1 0
 #S pdCstart 0 0 1
 
+# x_1 = 2
 S argDefBlank 0 2 0
 S argDef 0 3 0
 S arg0 0 3 -1
 S arg1 0 3 -2
 S argC 0 3 -3
 
+# x_2 = 11
 S argDefBlank 0 4 0
 S argDef 0 5 0
 S arg1 0 5 -1
@@ -221,7 +320,7 @@ S argC 0 5 -5
 S argDefCap 0 6 0
 
 
-# 4
+# 4 *
 S pdRegBuff 1 1 0
 S pdInClause 1 0 0
 S pdCoeff 1 -1 0
@@ -231,7 +330,7 @@ S coeff0 1 -1 2
 S coeff1 1 -1 3
 S coeffC 1 -1 4
 
-# *x2
+# x_2
 S pdRegStart 2 1 0
 S pdInClause 2 0 0
 S pdArg 2 -1 0
@@ -240,7 +339,53 @@ S reg0 2 1 1
 S reg1 2 1 2
 S regchk 2 1 3
 
+#
+S pdRegBuff 3 1 0
+S pdInClause 3 0 0
+S pdContClause 3 -1 0
+
+# *
+S pdRegBuff 4 1 0
+S pdInClause 4 0 0
+S pdMult 4 -1 0
+
+# x_1
+S pdRegStart 5 1 0
+S pdInClause 5 0 0
+S pdArg 5 -1 0
+
+S reg1 5 1 1
+S regchk 5 1 2
+
+# +
+S pdRegBuff 6 1 0
+S pdSumClause 6 0 0
+S pdEndClause 6 -1 0
+
+# 3 *
+S pdRegBuff 7 1 0
+S pdInClause 7 0 0
+S pdCoeff 7 -1 0
+
+S coeff1 7 -1 1
+S coeff1 7 -1 2
+S coeffC 7 -1 3
+
+# x_2
+S pdRegStart 8 1 0
+S pdInClause 8 0 0
+S pdArg 8 -1 0
+
+S reg0 8 1 1
+S reg1 8 1 2
+S regchk 8 1 3
+
+# +
+S pdRegBuff 9 1 0
+S pdSumClause 9 0 0
+S pdEndClause 9 -1 0
+
 # .
-S pdDefCap 3 1 0
-S pdDefCap 3 0 0
-S pdDefCap 3 -1 0
+S pdDefCap 10 1 0
+S pdDefCap 10 0 0
+S pdDefCap 10 -1 0
